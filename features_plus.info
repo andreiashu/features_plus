@@ -1,0 +1,5 @@
+name = Features Plus
+description = Features Plus
+core = 6.x
+package = Features
+dependencies[] = features

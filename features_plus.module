@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * Returns a list of keys for a given component.
+ */
+function features_plus_get_component($component_name, $skip_keys = array()) {
+  $stub = array();
+  foreach (features_get_components(TRUE) as $component => $info) {
+    if($component != $component_name) {
+      continue;
+    }
+
+    if ($options = features_invoke($component, 'features_export_options')) {
+      foreach ($options as $key => $value) {
+        if(in_array($key, $skip_keys)) {
+          continue;
+        }
+        $stub[$component][] = $key;
+      }
+    }
+  }
+
+  return $stub;
+}
+
+/**
+ * Returns an array of keys that shouldn't be exported for a given component.
+ */
+function features_plus_component_skip_keys($component_name) {
+  $function = 'features_plus_' . $component_name . '_skip_keys';
+  if(function_exists($function)) {
+    return $function();
+  }
+
+  return array();
+}
+
+function features_plus_variable_skip_keys() {
+  return array(
+    'drupal_private_key',
+    'css_js_query_string',
+    'javascript_parsed',
+  );
+}
